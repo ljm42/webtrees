@@ -34,7 +34,7 @@ User-Agent: yandex        # Popular Russian search engine
 User-Agent: baiduspider   # Popular Chinese search engine
 Allow: /family.php
 Allow: /index.php
-Allow: /indilist.php
+#Allow: /indilist.php
 Allow: /individual.php
 Allow: /mediafirewall.php
 Allow: /mediaviewer.php
@@ -51,4 +51,4 @@ User-Agent: *
 Disallow: /
 
 # Put your sitemap here:
-#Sitemap: http://www.example.com/module.php?mod=sitemap&mod_action=generate&file=sitemap.xml
+Sitemap: http://larry.meaney.name/module.php?mod=sitemap&mod_action=generate&file=sitemap.xml
