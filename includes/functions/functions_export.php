@@ -168,7 +168,7 @@ function convert_media_path($rec, $path) {
  *  'slashes':      what folder separators apply to media file paths?  (forward, backward)
  */
 function export_gedcom($gedcom, $gedout, $exportOptions) {
-	global $GEDCOM;
+	global $GEDCOM, $WT_TREE;
 
 	// Temporarily switch to the specified GEDCOM
 	$oldGEDCOM = $GEDCOM;
@@ -204,7 +204,11 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 		" FROM `##individuals` WHERE i_file=? ORDER BY i_id"
 	)->execute(array($ged_id))->fetchAll();
 	foreach ($rows as $row) {
-		$rec = WT_Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom)->privatizeGedcom($access_level);
+		$object = WT_Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+		$rec = $object->privatizeGedcom($access_level);
+		$rec .= "\n";
+		$rec .= "1 SOUR @WEBTREES@\n";
+		$rec .= "2 PAGE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$object->getRawUrl()."\n";
 		if ($exportOptions['toANSI']=="yes") {
 			$rec=utf8_decode($rec);
 		}
@@ -220,7 +224,11 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 		" FROM `##families` WHERE f_file=? ORDER BY f_id"
 	)->execute(array($ged_id))->fetchAll();
 	foreach ($rows as $row) {
-		$rec = WT_Family::getInstance($row->xref, $row->gedcom_id, $row->gedcom)->privatizeGedcom($access_level);
+		$object = WT_Family::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+		$rec = $object->privatizeGedcom($access_level);
+		$rec .= "\n";
+		$rec .= "1 SOUR @WEBTREES@\n";
+		$rec .= "2 PAGE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$object->getRawUrl()."\n";
 		if ($exportOptions['toANSI']=="yes") {
 			$rec=utf8_decode($rec);
 		}
@@ -236,7 +244,10 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 		" FROM `##sources` WHERE s_file=? ORDER BY s_id"
 	)->execute(array($ged_id))->fetchAll();
 	foreach ($rows as $row) {
-		$rec = WT_Source::getInstance($row->xref, $row->gedcom_id, $row->gedcom)->privatizeGedcom($access_level);
+		$object = WT_Source::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+		$rec = $object->privatizeGedcom($access_level);
+		$rec .= "\n";
+		$rec .= "1 NOTE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$object->getRawUrl()."\n";
 		if ($exportOptions['toANSI']=="yes") {
 			$rec=utf8_decode($rec);
 		}
@@ -290,6 +301,8 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 			$buffer='';
 		}
 	}
+	
+	$buffer .= "0 @WEBTREES@ SOUR\n1 TITL ".$WT_TREE->tree_title."\n";
 
 	fwrite($gedout, $buffer."0 TRLR".WT_EOL);
 
