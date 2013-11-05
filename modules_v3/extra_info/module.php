@@ -90,6 +90,7 @@ class extra_info_WT_Module extends WT_Module implements WT_Module_Sidebar {
 		case 'RIN':
 		case 'SSN':
 		case '_UID':
+		case '_FSFTID':
 			return true;
 		default:
 			return false;

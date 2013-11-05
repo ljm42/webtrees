@@ -79,6 +79,8 @@ class WT_Gedcom_Tag {
 		'__BRTM_GCHI', '__BRTM_GCH1', '__BRTM_GCH2', '__BRTM_HSIB', '__BRTM_SIBL',
 		// These pseudo-tags are generated dynamically to display media object attributes
 		'__FILE_SIZE__', '__IMAGE_SIZE__',
+		// custom tags
+		'_FSFTID',
 );
 
 	// Is $tag one of our known tags?
@@ -822,6 +824,7 @@ class WT_Gedcom_Tag {
 		// These "pseudo" tags are generated internally to present information about a media object
 		case '__FILE_SIZE__':  return WT_I18N::translate('File size');
 		case '__IMAGE_SIZE__': return WT_I18N::translate('Image dimensions');
+		case '_FSFTID': return 'Family Search ID';
 		default:
 			// If no specialisation exists (e.g. DEAT:CAUS), then look for the general (CAUS)
 			if (strpos($tag, ':')) {

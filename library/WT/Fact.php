@@ -383,7 +383,7 @@ class WT_Fact {
 				'TEMP',
 				'SLGC', 'BAPL', 'CONL', 'ENDL', 'SLGS',
 				'ADDR', 'PHON', 'EMAIL', '_EMAIL', 'EMAL', 'FAX', 'WWW', 'URL', '_URL',
-				'AFN', 'REFN', '_PRMN', 'REF', 'RIN', '_UID',
+				'AFN', 'REFN', '_PRMN', 'REF', 'RIN', '_UID', '_FSFTID',
 				'CHAN', '_TODO',
 			));
 
