@@ -222,6 +222,9 @@ function print_fact(WT_Fact $fact, WT_GedcomRecord $record) {
 	case 'AFN':
 		echo '<div class="field"><a href="https://familysearch.org/search/tree/results#count=20&query=afn:', rawurlencode($fact->getValue()), '" target="new">', WT_Filter::escapeHtml($fact->getValue()), '</a></div>';
 		break;
+	case '_FSFTID':
+		echo '<div class="field"><a href="https://familysearch.org/tree/#view=ancestor&person=', rawurlencode($fact->getValue()), '" target="new">', WT_Filter::escapeHtml($fact->getValue()), '</a></div>';
+		break;
 	case 'ASSO':
 		// we handle this later, in print_asso_rela_record()
 		break;

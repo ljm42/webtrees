@@ -68,7 +68,7 @@ class WT_Gedcom_Tag {
 		'_DBID', '_DEAT_CHIL', '_DEAT_GCHI', '_DEAT_GCH1', '_DEAT_GCH2', '_DEAT_GPAR', '_DEAT_GPA1', '_DEAT_GPA2',
 		'_DEAT_HSIB', '_DEAT_PARE', '_DEAT_SIBL', '_DEAT_SPOU', '_DEG', '_DETS',
 		'_EMAIL', '_EYEC', '_FA1', '_FA2', '_FA3', '_FA4', '_FA5', '_FA6', '_FA7', '_FA8',
-		'_FA9', '_FA10', '_FA11', '_FA12', '_FA13', '_FNRL', '_FREL', '_GEDF', '_GODP', '_HAIR',
+		'_FA9', '_FA10', '_FA11', '_FA12', '_FA13', '_FNRL', '_FREL', '_FSFTID', '_GEDF', '_GODP', '_HAIR',
 		'_HEB', '_HEIG', '_HNM', '_HOL', '_INTE', '_MARB_CHIL', '_MARB_FAMC', '_MARB_GCHI',
 		'_MARB_GCH1', '_MARB_GCH2', '_MARB_HSIB', '_MARB_PARE', '_MARB_SIBL', '_MARI',
 		'_MARNM', '_PRIM', '_MARNM_SURN', '_MARR_CHIL', '_MARR_FAMC', '_MARR_GCHI',
@@ -79,8 +79,7 @@ class WT_Gedcom_Tag {
 		'__BRTM_GCHI', '__BRTM_GCH1', '__BRTM_GCH2', '__BRTM_HSIB', '__BRTM_SIBL',
 		// These pseudo-tags are generated dynamically to display media object attributes
 		'__FILE_SIZE__', '__IMAGE_SIZE__',
-		// custom tags
-		'_FSFTID',
+		
 );
 
 	// Is $tag one of our known tags?
@@ -716,6 +715,7 @@ class WT_Gedcom_Tag {
 		case '_FA13': return WT_I18N::translate('Fact 13');
 		case '_FNRL': return /* I18N: gedcom tag _FNRL */ WT_I18N::translate('Funeral');
 		case '_FREL': return /* I18N: gedcom tag _FREL */ WT_I18N::translate('Relationship to father');
+		case '_FSFTID': return /* I18N: gedcom tag _FSFTID */ WT_I18N::translate('Family Search ID');
 		case '_GEDF': return /* I18N: gedcom tag _GEDF */ WT_I18N::translate('GEDCOM file');
 		case '_GODP': return /* I18N: gedcom tag _GODP */ WT_I18N::translate('Godparent');
 		case '_HAIR': return /* I18N: gedcom tag _HAIR */ WT_I18N::translate('Hair color');
@@ -824,7 +824,6 @@ class WT_Gedcom_Tag {
 		// These "pseudo" tags are generated internally to present information about a media object
 		case '__FILE_SIZE__':  return WT_I18N::translate('File size');
 		case '__IMAGE_SIZE__': return WT_I18N::translate('Image dimensions');
-		case '_FSFTID': return 'Family Search ID';
 		default:
 			// If no specialisation exists (e.g. DEAT:CAUS), then look for the general (CAUS)
 			if (strpos($tag, ':')) {
@@ -856,7 +855,7 @@ class WT_Gedcom_Tag {
 			'MARC', 'MARL', 'MARR', 'MARS', 'NAME', 'NATI', 'NATU', 'NCHI', 'NICK', 'NMR',
 			'OCCU', 'ORDI', 'ORDN', 'PROB', 'PROP', 'REFN', 'RELI', 'REPO', 'RESI', 'RESN',
 			'RETI', 'RFN', 'RIN', 'SEX', 'SLGC', 'SLGS', 'SSN', 'SUBM', 'TITL', 'WILL', 'WWW',
-			'_BRTM', '_COML', '_DEG', '_EYEC', '_FNRL', '_HAIR', '_HEIG', '_HNM', '_HOL',
+			'_BRTM', '_COML', '_DEG', '_EYEC', '_FNRL', '_FSFTID', '_HAIR', '_HEIG', '_HNM', '_HOL',
 			'_INTE', '_MARI', '_MBON', '_MDCL', '_MEDC', '_MILI', '_MILT', '_NAME',	'_NAMS',
 			'_NLIV', '_NMAR', '_NMR', '_PRMN', '_SEPR', '_TODO', '_UID', '_WEIG', '_YART',
 		);

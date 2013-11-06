@@ -113,6 +113,7 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 			'TITL',
 			'_BRTM:DATE','_BRTM:PLAC',
 			'_MILI',
+			'_FSFTID',
 		);
 		// Allow (some of) the user-specified fields to be selected
 		preg_match_all('/(' . WT_REGEX_TAG . ')/', get_gedcom_setting(WT_GED_ID, 'INDI_FACTS_ADD'), $facts);

@@ -178,6 +178,7 @@ $nonplacfacts=array(
 	'NCHI',
 	'SLGC',
 	'SLGS',
+	'_FSFTID',
 );
 
 // Tags that don't require a DATE subtag
@@ -207,6 +208,7 @@ $nondatefacts=array(
 	'WIFE',
 	'WWW',
 	'_EMAIL',
+	'_FSFTID',
 );
 
 // Tags that require a TYPE subtag
