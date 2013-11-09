@@ -147,7 +147,7 @@ if (!ini_get('date.timezone')) {
 $QUERY_STRING=isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
 
 define('WT_SERVER_NAME',
-	(empty($_SERVER['HTTPS']) || !in_array($_SERVER['HTTPS'], array('1', 'on', 'On', 'ON')) ?  'http://' : 'https://').
+	(($_SERVER['SERVER_PORT']==443) ?  'https://' : 'http://').
 	(empty($_SERVER['SERVER_NAME']) ? '' : $_SERVER['SERVER_NAME']).
 	(empty($_SERVER['SERVER_PORT']) || ($_SERVER['SERVER_PORT']==80 || $_SERVER['SERVER_PORT']==443) ? '' : ':'.$_SERVER['SERVER_PORT'])
 );
@@ -340,8 +340,6 @@ if (!$SEARCH_SPIDER && !$WT_SESSION->initiated) {
 define('WT_USER_ID',       getUserId());
 define('WT_USER_NAME',     getUserName());
 define('WT_USER_IS_ADMIN', userIsAdmin(WT_USER_ID));
-
-
 
 // If we have a preferred URL (e.g. www.example.com instead of www.isp.com/~example), then redirect to it.
 // also force authenticated users to use SSL, if so configured
