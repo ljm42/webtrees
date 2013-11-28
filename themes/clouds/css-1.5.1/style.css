@@ -1355,10 +1355,6 @@ background:#dfeeff;
 .new { outline: solid blue 1px; }
 .old { outline: solid red  1px; }
 
-.note_details {
-display:none;
-}
-
 a.showit {
 position:relative;
 z-index:24;
@@ -1608,22 +1604,22 @@ overflow:visible !important;
 .person_box_template  .details div {display:block;}
 .person_box_template img,
 .person_box_template a.gallery {
-	float:     left;
-	height:    50px;
-	margin:    0 3px 0 0;
-	max-width: 80px;
-	width:     auto;
+  float:     left;
+  height:    50px;
+  margin:    0 3px 0 0;
+  max-width: 80px;
+  width:     auto;
 }
 html[dir=rtl] .person_box_template img,
 html[dir=rtl] .person_box_template a.gallery {
-	float:  right;
-	margin: 0 0 0 3px;
+  float:  right;
+  margin: 0 0 0 3px;
 }
 .person_box_template i[class^="icon-silhouette"] {
-	float: left;
+  float: left;
 }
 html[dir=rtl] .person_box_template i[class^="icon-silhouette"] {
-	float: right;
+  float: right;
 }
 
 .gedcom_favorites_block .person_box .details2,
@@ -1655,6 +1651,8 @@ html[dir=rtl] .theme_form li ul li  {float:right;}
 
 #branches-page table, #medialist-page .list_table, #medialist-page .list_table_controls  {margin:0 auto;}
 #medialist-page .list_table_controls  {width:100%;}
+#branches-page ol {margin-left: 40px;font-size:14px;}
+html[dir=rtl] #branches-page ol {margin-right: 40px;}
 .list_table_controls td {min-width:40px;padding:1px;text-align:center;}
 
 #branches-page p {
@@ -1819,11 +1817,11 @@ display:none;
 }
 
 .popup ul {
-	background-image:none !important;
-	font-size:9px;
-	list-style:none;
-	margin:0;
-	padding:0 10px;
+  background-image:none !important;
+  font-size:9px;
+  list-style:none;
+  margin:0;
+  padding:0 10px;
 }
 
 .popup  li {
@@ -1994,7 +1992,6 @@ width:98%;
 
 #indi_header a {
 color:#333377;
-font-size:0.75em;
 font-weight:400;
 }
 
@@ -2076,13 +2073,13 @@ margin:0 5px 0 0;
 margin:3px 0;
 }
 
-#indi_note .note_details,#indi_note .fact_SOUR a {
+#indi_note .fact_SOUR a {
 font-size:100%;
 }
 
 #indi_note .fact_NOTE,
 #indi_note .fact_SOUR {
-	clear: both;
+  clear: both;
 }
 
 #main_name {
@@ -2172,10 +2169,10 @@ html[dir=rtl] .media-display-title {float:right;}
 
 /* ========= jquery-ui.custom.css changes ============ */
 .ui-accordion .ui-accordion-content {
-	margin-top: 1px;
-	overflow: visible;
-	padding: 0 5px;
-	position: relative;
+  margin-top: 1px;
+  overflow: visible;
+  padding: 0 5px;
+  position: relative;
 }
 
 .ui-accordion .ui-accordion-header {
@@ -2841,17 +2838,17 @@ html[dir=rtl] #edituser-table .value {margin:0 260px 0 0;}
 .logged_in_list {margin:5px 0 0 0;padding:0;line-height:20px;}
 
 @media print {
-	#clouds-container {border:0;}
-	#content {padding:0;}
-	#header,#footer,.noprint{display:none !important;}
-	#pedigree_chart {left:right;left:-80px;}
-	#header_accordion1 {width: 510px!important}
-	html[dir=rtl] #pedigree_chart {left:auto;right:-80px;}
-	#topMenu,#header select,#header input,#footer select,#backprint,#sidebar,form,button,input,#CB_All, #separator {display:none;}
-	#familybook_chart h3 {margin-bottom: 10px;}
-	/* buttons and input are used out of forms in sortable tables*/
-	.lifespan_outer {border:none;height:auto;overflow:visible;position:relative;width:auto;}
-	.lifespan_people {left:-10px;position:absolute;top:-60px;width:auto;z-index:1;}
+  #clouds-container {border:0;}
+  #content {padding:0;}
+  #header,#footer,.noprint{display:none !important;}
+  #pedigree_chart {left:right;left:-80px;}
+  #header_accordion1 {width: 510px!important}
+  html[dir=rtl] #pedigree_chart {left:auto;right:-80px;}
+  #topMenu,#header select,#header input,#footer select,#backprint,#sidebar,form,button,input,#CB_All, #separator {display:none;}
+  #familybook_chart h3 {margin-bottom: 10px;}
+  /* buttons and input are used out of forms in sortable tables*/
+  .lifespan_outer {border:none;height:auto;overflow:visible;position:relative;width:auto;}
+  .lifespan_people {left:-10px;position:absolute;top:-60px;width:auto;z-index:1;}
 }
 
 /* Icons */
@@ -3027,7 +3024,7 @@ html[dir=rtl] #save-cancel .save {float:right;}
 html[dir=rtl] #save-cancel .cancel {float:left;}
 #edit_interface-page,
 #addmedia-page {
-	margin-bottom: 50px;
+  margin-bottom: 50px;
 }
 
 /* Addmedia pop-ups*/
@@ -3067,27 +3064,33 @@ html[dir=rtl] #cboxCurrent {right:auto;left:0}
 html[dir=rtl] #cboxClose {right:auto;left:0}
 html[dir=rtl] #cboxSlideshow {right:57px;left:0; }
 
-/* Stories tab */
+/* Census assistant module */
+table.table-census-assistant th {
+  font-weight: bold;
+  text-align:  left;
+}
+
+/* Stories module */
 .story_title {
-	padding-top: 12px;
-	height:      32px;
-	font-size:   13px;
-	font-weight: 700;
+  padding-top: 12px;
+  height:      32px;
+  font-size:   13px;
+  font-weight: 700;
 }
 .story_body {
-	padding:     20px;
-	white-space: normal;
+  padding:     20px;
+  white-space: normal;
 }
 .story_edit {
-	padding:12px;
+  padding:12px;
 }
 /* User content in stories tab */
 #stories h2,
 #stories h3,
 #stories h4,
 #stories h5 {
-	padding-top: 20px;
+  padding-top: 20px;
 }
 #stories p {
-	padding-top: 8px;
+  padding-top: 8px;
 }
