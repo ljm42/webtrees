@@ -164,9 +164,9 @@ if (!ini_get('date.timezone')) {
 $QUERY_STRING=isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
 
 define('WT_SERVER_NAME',
-	(empty($_SERVER['HTTPS']) || !in_array($_SERVER['HTTPS'], array('1', 'on', 'On', 'ON')) ?  'http://' : 'https://').
+	(($_SERVER['SERVER_PORT']==443) ?  'https://' : 'http://').
 	(empty($_SERVER['SERVER_NAME']) ? '' : $_SERVER['SERVER_NAME']).
-	(empty($_SERVER['SERVER_PORT']) || $_SERVER['SERVER_PORT']==80 ? '' : ':'.$_SERVER['SERVER_PORT'])
+	(empty($_SERVER['SERVER_PORT']) || ($_SERVER['SERVER_PORT']==80 || $_SERVER['SERVER_PORT']==443) ? '' : ':'.$_SERVER['SERVER_PORT'])
 );
 
 // SCRIPT_NAME should always be correct, but is not always present.
@@ -191,6 +191,13 @@ if (!isset($_SERVER['REQUEST_URI']))  {
 // Some browsers do not send a user-agent string
 if (!isset($_SERVER['HTTP_USER_AGENT'])) {
 	$_SERVER['HTTP_USER_AGENT'] = '';
+}
+
+if (isset($_COOKIE['use_ssl']) && ($_COOKIE['use_ssl']==1) && (substr(WT_SERVER_NAME,0,7)=='http://')) {
+	// 'use_ssl' cookie is set, there should already be an SSL session active, redirect to it
+	// redirect *before* creating new session
+	header('Location: '.str_replace('http://', 'https://', WT_SERVER_NAME.WT_SCRIPT_PATH.WT_SCRIPT_NAME.($QUERY_STRING ? '?'.$QUERY_STRING : '')));
+	exit;
 }
 
 // Common functions
@@ -251,13 +258,6 @@ try {
 // Other user files can be stored elsewhere...
 define('WT_DATA_DIR', realpath(WT_Site::preference('INDEX_DIRECTORY') ? WT_Site::preference('INDEX_DIRECTORY') : 'data').DIRECTORY_SEPARATOR);
 
-// If we have a preferred URL (e.g. www.example.com instead of www.isp.com/~example), then redirect to it.
-$SERVER_URL=WT_Site::preference('SERVER_URL');
-if ($SERVER_URL && $SERVER_URL != WT_SERVER_NAME.WT_SCRIPT_PATH) {
-	header('Location: '.$SERVER_URL.WT_SCRIPT_NAME.($QUERY_STRING ? '?'.$QUERY_STRING : ''), true, 301);
-	exit;
-}
-
 // Request more resources - if we can/want to
 if (!ini_get('safe_mode')) {
 	$memory_limit=WT_Site::preference('MEMORY_LIMIT');
@@ -310,6 +310,9 @@ session_set_save_handler(
 	create_function('$maxlifetime', 'WT_DB::prepare("DELETE FROM `##session` WHERE session_time < DATE_SUB(NOW(), INTERVAL ? SECOND)")->execute(array($maxlifetime));return true;') // gc
 );
 
+// this needs to be a site setting
+define('USE_SSL', '1');
+
 // Use the Zend_Session object to start the session.
 // This allows all the other Zend Framework components to integrate with the session
 define('WT_SESSION_NAME', 'WT_SESSION');
@@ -321,6 +324,7 @@ $cfg=array(
 	'gc_divisor'      => 100,
 	'cookie_path'     => WT_SCRIPT_PATH,
 	'cookie_httponly' => true,
+	'cookie_secure'   => ((USE_SSL && (substr(WT_SERVER_NAME,0,8)=='https://')) ? true : null),
 );
 
 // Search engines don’t send cookies, and so create a new session with every visit.
@@ -348,6 +352,27 @@ if (!$SEARCH_SPIDER && !$WT_SESSION->initiated) {
 define('WT_USER_ID',       getUserId());
 define('WT_USER_NAME',     getUserName());
 define('WT_USER_IS_ADMIN', userIsAdmin(WT_USER_ID));
+
+// If we have a preferred URL (e.g. www.example.com instead of www.isp.com/~example), then redirect to it.
+// also force authenticated users to use SSL, if so configured
+$SERVER_URL=WT_Site::preference('SERVER_URL');
+$desired_host = ($SERVER_URL) ? $SERVER_URL : WT_SERVER_NAME.WT_SCRIPT_PATH;
+$desired_host = (strpos($desired_host,'://')) ? substr($desired_host,strpos($desired_host,'://')+3) : $desired_host; // remove 'http[s]?://' 
+if (USE_SSL) {
+	// require https on all authenticated pages and login.php
+	$desired_scheme = ( (WT_USER_NAME == '') && (WT_SCRIPT_NAME != 'login.php') ) ? 'http' : 'https';
+} else {
+	// do not change the scheme
+	$desired_scheme = substr(WT_SERVER_NAME,0, strpos(WT_SERVER_NAME,'://'));
+}
+if ($desired_scheme.'://'.$desired_host != WT_SERVER_NAME.WT_SCRIPT_PATH) {
+	if ($desired_scheme == 'http') {
+		// we are sending user to http, so delete any use_ssl cookie
+		setcookie('use_ssl',"", time() - 3600);
+	}
+	header('Location: '.$desired_scheme.'://'.$desired_host.WT_SCRIPT_NAME.($QUERY_STRING ? '?'.$QUERY_STRING : ''), true, 301);
+	exit;
+}
 
 // Set the active GEDCOM
 if (isset($_REQUEST['ged'])) {
@@ -451,7 +476,13 @@ if (WT_USER_ID && (WT_Filter::getBool('logout') || !WT_USER_NAME)) {
 if (WT_Site::preference('LOGIN_URL')) {
 	define('WT_LOGIN_URL', WT_Site::preference('LOGIN_URL'));
 } else {
-	define('WT_LOGIN_URL', WT_SERVER_NAME.WT_SCRIPT_PATH.'login.php');
+	if (USE_SSL) {
+		// force to use https
+		define('WT_LOGIN_URL', str_replace('http://','https://',WT_SERVER_NAME).WT_SCRIPT_PATH.'login.php');
+	} else {
+		// do not change the scheme
+		define('WT_LOGIN_URL', WT_SERVER_NAME.WT_SCRIPT_PATH.'login.php');
+	}
 }
 
 // If there is no current tree and we need one, then redirect somewhere

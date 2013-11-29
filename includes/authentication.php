@@ -54,6 +54,9 @@ function authenticateUser($user_name, $password) {
 				// Whenever we change our authorisation level change the session ID
 				Zend_Session::regenerateId();
 				$WT_SESSION->wt_user = $user_id;
+				if (USE_SSL) {
+					setcookie('use_ssl',1);
+				}
 				AddToLog('Login successful ->'.$user_name.'<-', 'auth');
 				return $user_id;
 			} elseif (!$is_admin && !$verified) {
@@ -81,6 +84,7 @@ function userLogout($user_id) {
 	// If we are logging ourself out, then end our session too.
 	if (WT_USER_ID==$user_id) {
 		Zend_Session::destroy();
+		setcookie('use_ssl',"", time() - 3600);
 	}
 }
 
