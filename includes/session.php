@@ -175,6 +175,13 @@ if (!isset($_SERVER['HTTP_USER_AGENT'])) {
 	$_SERVER['HTTP_USER_AGENT'] = '';
 }
 
+if (isset($_COOKIE['use_ssl']) && ($_COOKIE['use_ssl']==1) && (substr(WT_SERVER_NAME,0,7)=='http://')) {
+	// 'use_ssl' cookie is set, there should already be an SSL session active, redirect to it
+	// redirect *before* creating new session
+	header('Location: '.str_replace('http://', 'https://', WT_SERVER_NAME.WT_SCRIPT_PATH.WT_SCRIPT_NAME.($QUERY_STRING ? '?'.$QUERY_STRING : '')));
+	exit;
+}
+
 // Common functions
 require WT_ROOT.'includes/functions/functions.php';
 require WT_ROOT.'includes/functions/functions_db.php';
@@ -286,7 +293,7 @@ session_set_save_handler(
 );
 
 // this needs to be a site setting
-$USE_SSL = 1;
+define('USE_SSL', '1');
 
 // Use the Zend_Session object to start the session.
 // This allows all the other Zend Framework components to integrate with the session
@@ -299,7 +306,7 @@ $cfg=array(
 	'gc_divisor'      => 100,
 	'cookie_path'     => WT_SCRIPT_PATH,
 	'cookie_httponly' => true,
-	'cookie_secure'   => (($USE_SSL && (substr(WT_SERVER_NAME,0,8)=='https://')) ? true : null),
+	'cookie_secure'   => ((USE_SSL && (substr(WT_SERVER_NAME,0,8)=='https://')) ? true : null),
 );
 
 // Search engines don’t send cookies, and so create a new session with every visit.
@@ -333,15 +340,18 @@ define('WT_USER_IS_ADMIN', userIsAdmin(WT_USER_ID));
 $SERVER_URL=WT_Site::preference('SERVER_URL');
 $desired_host = ($SERVER_URL) ? $SERVER_URL : WT_SERVER_NAME.WT_SCRIPT_PATH;
 $desired_host = (strpos($desired_host,'://')) ? substr($desired_host,strpos($desired_host,'://')+3) : $desired_host; // remove 'http[s]?://' 
-if ($USE_SSL) {
-	// require https on all authenticated pages
-	// what about setup pages?
+if (USE_SSL) {
+	// require https on all authenticated pages and login.php
 	$desired_scheme = ( (WT_USER_NAME == '') && (WT_SCRIPT_NAME != 'login.php') ) ? 'http' : 'https';
 } else {
 	// do not change the scheme
 	$desired_scheme = substr(WT_SERVER_NAME,0, strpos(WT_SERVER_NAME,'://'));
 }
 if ($desired_scheme.'://'.$desired_host != WT_SERVER_NAME.WT_SCRIPT_PATH) {
+	if ($desired_scheme == 'http') {
+		// we are sending user to http, so delete any use_ssl cookie
+		setcookie('use_ssl',"", time() - 3600);
+	}
 	header('Location: '.$desired_scheme.'://'.$desired_host.WT_SCRIPT_NAME.($QUERY_STRING ? '?'.$QUERY_STRING : ''), true, 301);
 	exit;
 }
@@ -448,7 +458,7 @@ if (WT_USER_ID && (WT_Filter::getBool('logout') || !WT_USER_NAME)) {
 if (WT_Site::preference('LOGIN_URL')) {
 	define('WT_LOGIN_URL', WT_Site::preference('LOGIN_URL'));
 } else {
-	if ($USE_SSL) {
+	if (USE_SSL) {
 		// force to use https
 		define('WT_LOGIN_URL', str_replace('http://','https://',WT_SERVER_NAME).WT_SCRIPT_PATH.'login.php');
 	} else {
