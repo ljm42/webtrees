@@ -168,7 +168,7 @@ function convert_media_path($rec, $path) {
  *  'slashes':      what folder separators apply to media file paths?  (forward, backward)
  */
 function export_gedcom($gedcom, $gedout, $exportOptions) {
-  global $GEDCOM;
+  global $GEDCOM, $WT_TREE;
 
   // Temporarily switch to the specified GEDCOM
   $oldGEDCOM = $GEDCOM;
@@ -257,6 +257,9 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 
   foreach ($individuals as $individual) {
     $rec = $individual->privatizeGedcom($access_level);
+	$rec .= "\n";
+	$rec .= "1 SOUR @WEBTREES@\n";
+	$rec .= "2 PAGE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$individual->getRawUrl()."\n";
     if ($exportOptions['toANSI']=="yes") {
       $rec=utf8_decode($rec);
     }
@@ -269,6 +272,9 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 
   foreach ($families as $family) {
     $rec = $family->privatizeGedcom($access_level);
+	$rec .= "\n";
+	$rec .= "1 SOUR @WEBTREES@\n";
+	$rec .= "2 PAGE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$family->getRawUrl()."\n";
     if ($exportOptions['toANSI']=="yes") {
       $rec=utf8_decode($rec);
     }
@@ -281,6 +287,8 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
 
   foreach ($sources as $source) {
     $rec = $source->privatizeGedcom($access_level);
+	$rec .= "\n";
+	$rec .= "1 NOTE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$source->getRawUrl()."\n";
     if ($exportOptions['toANSI']=="yes") {
       $rec=utf8_decode($rec);
     }
@@ -316,6 +324,7 @@ function export_gedcom($gedcom, $gedout, $exportOptions) {
     }
   }
 
+  $buffer .= "0 @WEBTREES@ SOUR\n1 TITL ".$WT_TREE->tree_title."\n";
   fwrite($gedout, $buffer."0 TRLR".WT_EOL);
 
   $GEDCOM = $oldGEDCOM;
