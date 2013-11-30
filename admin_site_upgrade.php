@@ -34,6 +34,7 @@ if (preg_match('/^[0-9.]+\|[0-9.]+\|/', $latest_version_txt)) {
 
 $latest_version='2.0';
 $download_url='https://github.com/ljm42/webtrees/archive/localmods.zip';
+$zip_path_remove='webtrees-localmods';
 
 $latest_version_html = '<span dir="ltr">' . $latest_version . '</span>';
 $download_url_html   = '<b dir="auto"><a href="' . WT_Filter::escapeHtml($download_url) . '">' . WT_Filter::escapeHtml($download_url) . '</a></b>';
@@ -340,7 +341,7 @@ $num_files = $res['nb'];
 $start_time = microtime(true);
 $res = $archive->extract(
 	PCLZIP_OPT_PATH,         $zip_dir,
-	PCLZIP_OPT_REMOVE_PATH, 'webtrees',
+	PCLZIP_OPT_REMOVE_PATH,  $zip_path_remove,
 	PCLZIP_OPT_REPLACE_NEWER
 );
 $end_time = microtime(true);
@@ -348,7 +349,7 @@ $end_time = microtime(true);
 if (is_array($res)) {
 	foreach ($res as $result) {
 		// Note that we're stripping the initial "webtrees/", so the top folder will fail.
-		if ($result['status'] != 'ok' && $result['filename'] != 'webtrees/') {
+		if ($result['status'] != 'ok' && $result['filename'] != $zip_path_remove.'/') {
 			echo '<br>', WT_I18N::translate('An error occurred when unzipping the file.'), $icon_failure;
 			echo '<pre>';
 			var_dump($result);
@@ -420,7 +421,7 @@ echo '<li>', /* I18N: The system is about to [...] */ WT_I18N::translate('Copy f
 $start_time = microtime(true);
 $res = $archive->extract(
 	PCLZIP_OPT_PATH,        WT_ROOT,
-	PCLZIP_OPT_REMOVE_PATH, 'webtrees',
+	PCLZIP_OPT_REMOVE_PATH, $zip_path_remove,
 	PCLZIP_OPT_REPLACE_NEWER
 );
 $end_time = microtime(true);
