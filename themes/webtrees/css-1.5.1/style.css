@@ -295,11 +295,11 @@ a.showit:hover > span {display:block;position:absolute;top:22px;left:0;width:225
 .ui-autocomplete-input {background-color:#eee8aa;}
 .ui-autocomplete {padding:0;border:1px solid #000000;background-color:#ffffff;z-index:99999;list-style-position:outside;list-style:none;margin:0;max-height:200px;overflow-y:auto;}
 .ui-autocomplete li {margin:0;padding:2px 5px;cursor:default;display:block;
-  /* if width will be 100% horizontal scrollbar will apear when scroll mode will be used */
-  /*width:100%;*/
-  font:menu;font-size:12px;
-  /* it is very important, if line-height not setted or setted in relative units scroll will be broken in firefox */
-  line-height:14px;overflow:hidden;
+	/* if width will be 100% horizontal scrollbar will apear when scroll mode will be used */
+	/*width:100%;*/
+	font:menu;font-size:12px;
+	/* it is very important, if line-height not setted or setted in relative units scroll will be broken in firefox */
+	line-height:14px;overflow:hidden;
 }
 .ui-autocomplete-loading {background:#ffffff url(images/indicator.gif) right center no-repeat;}
 .ui-autocomplete li:nth-child(odd) {background-color:#eeeeee;}
@@ -350,22 +350,22 @@ td.descriptionbox a {color:#ffffff;}/* this keeps the tag color the same when it
 .person_box_template .details div {display:block;}
 .person_box_template img,
 .person_box_template a.gallery {
-  float:     left;
-  height:    50px;
-  margin:    0 4px 0 0;
-  max-width: 80px;
-  width:     auto;
+	float:     left;
+	height:    50px;
+	margin:    0 4px 0 0;
+	max-width: 80px;
+	width:     auto;
 }
 html[dir=rtl] .person_box_template img,
 html[dir=rtl] .person_box_template a.gallery {
-  float:  right;
-  margin: 0 0 0 4px;
+	float:  right;
+	margin: 0 0 0 4px;
 }
 .person_box_template i[class^="icon-silhouette"] {
-  float:left;
+	float:left;
 }
 html[dir=rtl] .person_box_template i[class^="icon-silhouette"] {
-  float:right;
+	float:right;
 }
 
 #branches-page table, #medialist-page .list_table, #medialist-page .list_table_controls {margin:0 auto;}
@@ -912,17 +912,17 @@ html[dir=rtl] #edituser-table .label {float:right;}
 html[dir=rtl] #edituser-table .value {margin:0 260px 0 0;}
 
 @media print {
-  * {margin:0;padding:0;}
-  #backprint, #separator  {display:none;}
-  #header, #footer, .noprint {display:none !important;}
-  #pedigree_chart {left:right;left:-80px;}
-  #header_accordion1 {width: 510px!important}
-  html[dir=rtl] #pedigree_chart {left:auto;right:-80px;}
-  form, button, input {display:none;}
-  #familybook_chart h3 {margin-bottom: 10px;}
-  .lifespan_outer {position:relative;width:auto;height:auto;overflow:visible;border:none;}
-  .lifespan_people {position:absolute;width:auto;	left:-10px;	top:-60px;z-index:1;}
-  #CB_All {display:none;}
+	* {margin:0;padding:0;}
+	#backprint, #separator  {display:none;}
+	#header, #footer, .noprint {display:none !important;}
+	#pedigree_chart {left:right;left:-80px;}
+	#header_accordion1 {width: 510px!important}
+	html[dir=rtl] #pedigree_chart {left:auto;right:-80px;}
+	form, button, input {display:none;}
+	#familybook_chart h3 {margin-bottom: 10px;}
+	.lifespan_outer {position:relative;width:auto;height:auto;overflow:visible;border:none;}
+	.lifespan_people {position:absolute;width:auto;	left:-10px;	top:-60px;z-index:1;}
+	#CB_All {display:none;}
 }
 
 /* Icons */
@@ -1098,7 +1098,7 @@ html[dir=rtl] #save-cancel .save {float:right;}
 html[dir=rtl] #save-cancel .cancel {float:left;}
 #edit_interface-page,
 #addmedia-page {
-  margin-bottom: 50px;
+	margin-bottom: 50px;
 }
 
 /* Addmedia pop-ups*/
@@ -1141,21 +1141,21 @@ html[dir=rtl] #cboxSlideshow {right:57px;left:0; }
 
 /* Census assistant module */
 table.table-census-assistant th {
-  font-weight: bold;
-  text-align:  left;
+	font-weight: bold;
+	text-align:  left;
 }
 
 /* Stories module */
 .story_title {
-  padding-top: 12px;
-  height:      32px;
-  font-size:   13px;
-  font-weight: 700;
+	padding-top: 12px;
+	height:      32px;
+	font-size:   13px;
+	font-weight: 700;
 }
 .story_body {
-  padding:     20px;
-  white-space: normal;
+	padding:     20px;
+	white-space: normal;
 }
 .story_edit {
-  padding: 12px;
+	padding: 12px;
 }

@@ -375,6 +375,7 @@ html[dir=rtl] #relationship_chart {margin-right:10px;}
 #branches-page table, #medialist-page .list_table, #medialist-page .list_table_controls  {margin:0 auto;}
 #branches-page ol {margin-left: 40px;font-size:14px;}
 html[dir=rtl] #branches-page ol {margin-right: 40px;}
+#surnlist {margin-bottom: 20px;}
 #medialist-page .list_table_controls  {width:100%;}
 .list_table_controls td {min-width:40px;padding:1px;text-align:center;}
 
@@ -563,22 +564,22 @@ a.showit > span {display:none;}
 .person_box_template  .details div {display:block;}
 .person_box_template img,
 .person_box_template a.gallery {
-  float:     left;
-  height:    45px;
-  margin:    0 3px 0 0;
-  max-width: 60px;
-  width:     auto;
+	float:     left;
+	height:    45px;
+	margin:    0 3px 0 0;
+	max-width: 60px;
+	width:     auto;
 }
 html[dir=rtl] .person_box_template img,
 html[dir=rtl] .person_box_template a.gallery {
-  float:  right;
-  margin: 0 0 0 3px;
+	float:  right;
+	margin: 0 0 0 3px;
 }
 .person_box_template i[class^="icon-silhouette"] {
-  float: left;
+	float: left;
 }
 html[dir=rtl] .person_box_template i[class^="icon-silhouette"] {
-  float: right;
+	float: right;
 }
 
 .gedcom_favorites_block .person_box .details2,.gedcom_favorites_block .person_boxF.details2,.gedcom_favorites_block
@@ -986,16 +987,16 @@ html[dir=rtl] #edituser-table .label {float:right;}
 html[dir=rtl] #edituser-table .value {margin:0 260px 0 0;}
 
 @media print {
-  form,button,input {display:none;}
-  #header select,#header input,#footer select,#backprint, #sidebar, #main-menu, #separator {display:none;}
-  #header,#footer,.noprint {display:none!important;}
-  #CB_All {display:none;}
-  #familybook_chart h3 {margin-bottom: 10px;}
-  #header_accordion1 {width: 510px!important}
-  #pedigree_chart {left:right;left:-90px;}
-  html[dir=rtl] #pedigree_chart {left:auto;right:-90px;}
-  .lifespan_outer {position:relative;width:auto;height:auto;overflow:visible;border:none;}
-  .lifespan_people {position:absolute;width:auto;left:-10px;top:-60px;z-index:1;}
+	form,button,input {display:none;}
+	#header select,#header input,#footer select,#backprint, #sidebar, #main-menu, #separator {display:none;}
+	#header,#footer,.noprint {display:none!important;}
+	#CB_All {display:none;}
+	#familybook_chart h3 {margin-bottom: 10px;}
+	#header_accordion1 {width: 510px!important}
+	#pedigree_chart {left:right;left:-90px;}
+	html[dir=rtl] #pedigree_chart {left:auto;right:-90px;}
+	.lifespan_outer {position:relative;width:auto;height:auto;overflow:visible;border:none;}
+	.lifespan_people {position:absolute;width:auto;left:-10px;top:-60px;z-index:1;}
 }
 
 /* Icons */
@@ -1166,7 +1167,7 @@ html[dir=rtl] #save-cancel .save {float:right;}
 html[dir=rtl] #save-cancel .cancel {float:left;}
 #edit_interface-page,
 #addmedia-page {
-  margin-bottom: 50px;
+	margin-bottom: 50px;
 }
 
 /* Addmedia pop-ups*/
@@ -1208,31 +1209,31 @@ html[dir=rtl] #cboxSlideshow {right:57px;left:0; }
 
 /* Census assistant module */
 table.table-census-assistant th {
-  font-weight: bold;
-  text-align:  left;
+	font-weight: bold;
+	text-align:  left;
 }
 
 /* Stories module */
 .story_title {
-  padding-top: 12px;
-  height:      32px;
-  font-size:   13px;
-  font-weight: 700;
+	padding-top: 12px;
+	height:      32px;
+	font-size:   13px;
+	font-weight: 700;
 }
 .story_body {
-  padding:     20px;
-  white-space: normal;
+	padding:     20px;
+	white-space: normal;
 }
 .story_edit {
-  padding: 12px;
+	padding: 12px;
 }
 /* User content in stories tab */
 #stories h2,
 #stories h3,
 #stories h4,
 #stories h5 {
-  padding-top: 20px;
+	padding-top: 20px;
 }
 #stories p {
-  padding-top: 8px;
+	padding-top: 8px;
 }

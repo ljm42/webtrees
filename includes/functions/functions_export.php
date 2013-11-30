@@ -22,137 +22,137 @@
 // Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 if (!defined('WT_WEBTREES')) {
-  header('HTTP/1.0 403 Forbidden');
-  exit;
+	header('HTTP/1.0 403 Forbidden');
+	exit;
 }
 
 // Tidy up a gedcom record on export, for compatibility/portability
 function reformat_record_export($rec) {
-  global $WORD_WRAPPED_NOTES;
+	global $WORD_WRAPPED_NOTES;
 
-  $newrec='';
-  foreach (preg_split('/[\r\n]+/', $rec, -1, PREG_SPLIT_NO_EMPTY) as $line) {
-    // Escape @ characters
-    // TODO:
-    // Need to replace “@” with “@@”, unless it is either
-    // a) an xref, such as @I123@
-    // b) an escape, such as @#D FRENCH R@
-    if (false) {
-      $line=str_replace('@', '@@', $line);
-    }
-    // Split long lines
-    // The total length of a GEDCOM line, including level number, cross-reference number,
-    // tag, value, delimiters, and terminator, must not exceed 255 (wide) characters.
-    // Use quick strlen() check before using slower utf8_strlen() check
-    if (strlen($line)>WT_GEDCOM_LINE_LENGTH && utf8_strlen($line)>WT_GEDCOM_LINE_LENGTH) {
-      list($level, $tag)=explode(' ', $line, 3);
-      if ($tag!='CONT' && $tag!='CONC') {
-        $level++;
-      }
-      do {
-        // Split after $pos chars
-        $pos=WT_GEDCOM_LINE_LENGTH;
-        if ($WORD_WRAPPED_NOTES) {
-          // Split on a space, and remove it (for compatibility with some desktop apps)
-          while ($pos && utf8_substr($line, $pos-1, 1)!=' ') {
-            --$pos;
-          }
-          if ($pos==strpos($line, ' ', 3)+1) {
-            // No spaces in the data! Can’t split it :-(
-            break;
-          } else {
-            $newrec.=utf8_substr($line, 0, $pos-1).WT_EOL;
-            $line=$level.' CONC '.utf8_substr($line, $pos);
-          }
-        } else {
-          // Split on a non-space (standard gedcom behaviour)
-          while ($pos && utf8_substr($line, $pos-1, 1)==' ') {
-            --$pos;
-          }
-          if ($pos==strpos($line, ' ', 3)) {
-            // No non-spaces in the data! Can’t split it :-(
-            break;
-          }
-          $newrec.=utf8_substr($line, 0, $pos).WT_EOL;
-          $line=$level.' CONC '.utf8_substr($line, $pos);
-        }
-      } while (utf8_strlen($line)>WT_GEDCOM_LINE_LENGTH);
-    }
-    $newrec.=$line.WT_EOL;
-  }
-  return $newrec;
+	$newrec='';
+	foreach (preg_split('/[\r\n]+/', $rec, -1, PREG_SPLIT_NO_EMPTY) as $line) {
+		// Escape @ characters
+		// TODO:
+		// Need to replace “@” with “@@”, unless it is either
+		// a) an xref, such as @I123@
+		// b) an escape, such as @#D FRENCH R@
+		if (false) {
+			$line=str_replace('@', '@@', $line);
+		}
+		// Split long lines
+		// The total length of a GEDCOM line, including level number, cross-reference number,
+		// tag, value, delimiters, and terminator, must not exceed 255 (wide) characters.
+		// Use quick strlen() check before using slower utf8_strlen() check
+		if (strlen($line)>WT_GEDCOM_LINE_LENGTH && utf8_strlen($line)>WT_GEDCOM_LINE_LENGTH) {
+			list($level, $tag)=explode(' ', $line, 3);
+			if ($tag!='CONT' && $tag!='CONC') {
+				$level++;
+			}
+			do {
+				// Split after $pos chars
+				$pos=WT_GEDCOM_LINE_LENGTH;
+				if ($WORD_WRAPPED_NOTES) {
+					// Split on a space, and remove it (for compatibility with some desktop apps)
+					while ($pos && utf8_substr($line, $pos-1, 1)!=' ') {
+						--$pos;
+					}
+					if ($pos==strpos($line, ' ', 3)+1) {
+						// No spaces in the data! Can’t split it :-(
+						break;
+					} else {
+						$newrec.=utf8_substr($line, 0, $pos-1).WT_EOL;
+						$line=$level.' CONC '.utf8_substr($line, $pos);
+					}
+				} else {
+					// Split on a non-space (standard gedcom behaviour)
+					while ($pos && utf8_substr($line, $pos-1, 1)==' ') {
+						--$pos;
+					}
+					if ($pos==strpos($line, ' ', 3)) {
+						// No non-spaces in the data! Can’t split it :-(
+						break;
+					}
+					$newrec.=utf8_substr($line, 0, $pos).WT_EOL;
+					$line=$level.' CONC '.utf8_substr($line, $pos);
+				}
+			} while (utf8_strlen($line)>WT_GEDCOM_LINE_LENGTH);
+		}
+		$newrec.=$line.WT_EOL;
+	}
+	return $newrec;
 }
 
 //Create a header for a (newly-created or already-imported) gedcom file.
 function gedcom_header($gedfile) {
-  $ged_id = get_id_from_gedcom($gedfile);
+	$ged_id = get_id_from_gedcom($gedfile);
 
-  // Default values for a new header
-  $HEAD = "0 HEAD";
-  $SOUR = "\n1 SOUR ".WT_WEBTREES."\n2 NAME ".WT_WEBTREES."\n2 VERS ".WT_VERSION_TEXT;
-  $DEST = "\n1 DEST DISKETTE";
-  $DATE = "\n1 DATE ".strtoupper(date("d M Y"))."\n2 TIME ".date("H:i:s");
-  $GEDC = "\n1 GEDC\n2 VERS 5.5.1\n2 FORM Lineage-Linked";
-  $CHAR = "\n1 CHAR UTF-8";
-  $FILE = "\n1 FILE {$gedfile}";
-  $LANG = "";
-  $PLAC = "\n1 PLAC\n2 FORM City, County, State/Province, Country";
-  $COPR = "";
-  $SUBN = "";
-  $SUBM = "\n1 SUBM @SUBM@\n0 @SUBM@ SUBM\n1 NAME ".WT_USER_NAME; // The SUBM record is mandatory
+	// Default values for a new header
+	$HEAD = "0 HEAD";
+	$SOUR = "\n1 SOUR ".WT_WEBTREES."\n2 NAME ".WT_WEBTREES."\n2 VERS ".WT_VERSION_TEXT;
+	$DEST = "\n1 DEST DISKETTE";
+	$DATE = "\n1 DATE ".strtoupper(date("d M Y"))."\n2 TIME ".date("H:i:s");
+	$GEDC = "\n1 GEDC\n2 VERS 5.5.1\n2 FORM Lineage-Linked";
+	$CHAR = "\n1 CHAR UTF-8";
+	$FILE = "\n1 FILE {$gedfile}";
+	$LANG = "";
+	$PLAC = "\n1 PLAC\n2 FORM City, County, State/Province, Country";
+	$COPR = "";
+	$SUBN = "";
+	$SUBM = "\n1 SUBM @SUBM@\n0 @SUBM@ SUBM\n1 NAME ".WT_USER_NAME; // The SUBM record is mandatory
 
-  // Preserve some values from the original header
-  $record = WT_GedcomRecord::getInstance('HEAD');
-  if ($fact = $record->getFirstFact('PLAC')) {
-    $PLAC = "\n1 PLAC\n2 FORM " . $fact->getAttribute('FORM');
-  }
-  if ($fact = $record->getFirstFact('LANG')) {
-    $LANG = $fact->getValue();
-  }
-  if ($fact = $record->getFirstFact('SUBN')) {
-    $SUBN = $fact->getValue();
-  }
-  if ($fact = $record->getFirstFact('COPR')) {
-    $COPR = $fact->getValue();
-  }
-  // Link to actual SUBM/SUBN records, if they exist
-  $subn=
-    WT_DB::prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
-    ->execute(array('SUBN', $ged_id))
-    ->fetchOne();
-  if ($subn) {
-    $SUBN="\n1 SUBN @{$subn}@";
-  }
-  $subm=
-    WT_DB::prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
-    ->execute(array('SUBM', $ged_id))
-    ->fetchOne();
-  if ($subm) {
-    $SUBM="\n1 SUBM @{$subm}@";
-  }
+	// Preserve some values from the original header
+	$record = WT_GedcomRecord::getInstance('HEAD');
+	if ($fact = $record->getFirstFact('PLAC')) {
+		$PLAC = "\n1 PLAC\n2 FORM " . $fact->getAttribute('FORM');
+	}
+	if ($fact = $record->getFirstFact('LANG')) {
+		$LANG = $fact->getValue();
+	}
+	if ($fact = $record->getFirstFact('SUBN')) {
+		$SUBN = $fact->getValue();
+	}
+	if ($fact = $record->getFirstFact('COPR')) {
+		$COPR = $fact->getValue();
+	}
+	// Link to actual SUBM/SUBN records, if they exist
+	$subn=
+		WT_DB::prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
+		->execute(array('SUBN', $ged_id))
+		->fetchOne();
+	if ($subn) {
+		$SUBN="\n1 SUBN @{$subn}@";
+	}
+	$subm=
+		WT_DB::prepare("SELECT o_id FROM `##other` WHERE o_type=? AND o_file=?")
+		->execute(array('SUBM', $ged_id))
+		->fetchOne();
+	if ($subm) {
+		$SUBM="\n1 SUBM @{$subm}@";
+	}
 
-  return $HEAD . $SOUR . $DEST . $DATE . $GEDC . $CHAR . $FILE . $COPR . $LANG . $PLAC . $SUBN . $SUBM . "\n";
+	return $HEAD . $SOUR . $DEST . $DATE . $GEDC . $CHAR . $FILE . $COPR . $LANG . $PLAC . $SUBN . $SUBM . "\n";
 }
 
 // Prepend the GEDCOM_MEDIA_PATH to media filenames
 function convert_media_path($rec, $path) {
-  if ($path && preg_match('/\n1 FILE (.+)/', $rec, $match)) {
-    $old_file_name=$match[1];
-    if (!preg_match('~^(https?|ftp):~', $old_file_name)) { // Don’t modify external links
-      // Adding a windows path?  Convert the slashes.
-      if (strpos($path, '\\')!==false) {
-        $new_file_name=preg_replace('~/+~', '\\', $old_file_name);
-      } else {
-        $new_file_name=$old_file_name;
-      }
-      // Path not present - add it.
-      if (strpos($new_file_name, $path)===false) {
-        $new_file_name=$path . $new_file_name;
-      }
-      $rec=str_replace("\n1 FILE ".$old_file_name, "\n1 FILE ".$new_file_name, $rec);
-    }
-  }
-  return $rec;
+	if ($path && preg_match('/\n1 FILE (.+)/', $rec, $match)) {
+		$old_file_name=$match[1];
+		if (!preg_match('~^(https?|ftp):~', $old_file_name)) { // Don’t modify external links
+			// Adding a windows path?  Convert the slashes.
+			if (strpos($path, '\\')!==false) {
+				$new_file_name=preg_replace('~/+~', '\\', $old_file_name);
+			} else {
+				$new_file_name=$old_file_name;
+			}
+			// Path not present - add it.
+			if (strpos($new_file_name, $path)===false) {
+				$new_file_name=$path . $new_file_name;
+			}
+			$rec=str_replace("\n1 FILE ".$old_file_name, "\n1 FILE ".$new_file_name, $rec);
+		}
+	}
+	return $rec;
 }
 
 /*
@@ -168,164 +168,164 @@ function convert_media_path($rec, $path) {
  *  'slashes':      what folder separators apply to media file paths?  (forward, backward)
  */
 function export_gedcom($gedcom, $gedout, $exportOptions) {
-  global $GEDCOM, $WT_TREE;
+	global $GEDCOM, $WT_TREE;
 
-  // Temporarily switch to the specified GEDCOM
-  $oldGEDCOM = $GEDCOM;
-  $GEDCOM = $gedcom;
-  $ged_id=get_id_from_gedcom($gedcom);
+	// Temporarily switch to the specified GEDCOM
+	$oldGEDCOM = $GEDCOM;
+	$GEDCOM = $gedcom;
+	$ged_id=get_id_from_gedcom($gedcom);
 
-  switch($exportOptions['privatize']) {
-  case 'gedadmin':
-    $access_level=WT_PRIV_NONE;
-    break;
-  case 'user':
-    $access_level=WT_PRIV_USER;
-    break;
-  case 'visitor':
-    $access_level=WT_PRIV_PUBLIC;
-    break;
-  case 'none':
-    $access_level=WT_PRIV_HIDE;
-    break;
-  }
+	switch($exportOptions['privatize']) {
+	case 'gedadmin':
+		$access_level=WT_PRIV_NONE;
+		break;
+	case 'user':
+		$access_level=WT_PRIV_USER;
+		break;
+	case 'visitor':
+		$access_level=WT_PRIV_PUBLIC;
+		break;
+	case 'none':
+		$access_level=WT_PRIV_HIDE;
+		break;
+	}
 
-  $head=gedcom_header($gedcom);
-  if ($exportOptions['toANSI']=="yes") {
-    $head=str_replace("UTF-8", "ANSI", $head);
-    $head=utf8_decode($head);
-  }
+	$head=gedcom_header($gedcom);
+	if ($exportOptions['toANSI']=="yes") {
+		$head=str_replace("UTF-8", "ANSI", $head);
+		$head=utf8_decode($head);
+	}
 
-  // Fetch all the records first - to prevent MySQL timeouts between fetches
-  $rows=WT_DB::prepare(
-    "SELECT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom".
-    " FROM `##individuals` WHERE i_file=? ORDER BY i_id"
-  )->execute(array($ged_id))->fetchAll();
-  $individuals = array();
-  foreach ($rows as $row) {
-    $individuals[] = WT_Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
-  }
-  
-  $rows=WT_DB::prepare(
-    "SELECT f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom".
-    " FROM `##families` WHERE f_file=? ORDER BY f_id"
-  )->execute(array($ged_id))->fetchAll();
-  $families = array();
-  foreach ($rows as $row) {
-    $families[] = WT_Family::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
-  }
+	// Fetch all the records first - to prevent MySQL timeouts between fetches
+	$rows=WT_DB::prepare(
+		"SELECT i_id AS xref, i_file AS gedcom_id, i_gedcom AS gedcom".
+		" FROM `##individuals` WHERE i_file=? ORDER BY i_id"
+	)->execute(array($ged_id))->fetchAll();
+	$individuals = array();
+	foreach ($rows as $row) {
+		$individuals[] = WT_Individual::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+	}
+	
+	$rows=WT_DB::prepare(
+		"SELECT f_id AS xref, f_file AS gedcom_id, f_gedcom AS gedcom".
+		" FROM `##families` WHERE f_file=? ORDER BY f_id"
+	)->execute(array($ged_id))->fetchAll();
+	$families = array();
+	foreach ($rows as $row) {
+		$families[] = WT_Family::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+	}
 
-  $rows=WT_DB::prepare(
-    "SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom".
-    " FROM `##sources` WHERE s_file=? ORDER BY s_id"
-  )->execute(array($ged_id))->fetchAll();
-  $sources = array();
-  foreach ($rows as $row) {
-    $sources[] = WT_Source::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
-  }
+	$rows=WT_DB::prepare(
+		"SELECT s_id AS xref, s_file AS gedcom_id, s_gedcom AS gedcom".
+		" FROM `##sources` WHERE s_file=? ORDER BY s_id"
+	)->execute(array($ged_id))->fetchAll();
+	$sources = array();
+	foreach ($rows as $row) {
+		$sources[] = WT_Source::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+	}
 
-  $rows=WT_DB::prepare(
-    "SELECT 'OBJE' AS type, m_id AS xref, m_file AS gedcom_id, m_gedcom AS gedcom".
-    " FROM `##media` WHERE m_file=? ORDER BY m_id"
-  )->execute(array($ged_id))->fetchAll();
-  $medias = array();
-  foreach ($rows as $row) {
-    $medias[] = WT_Media::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
-  }
+	$rows=WT_DB::prepare(
+		"SELECT 'OBJE' AS type, m_id AS xref, m_file AS gedcom_id, m_gedcom AS gedcom".
+		" FROM `##media` WHERE m_file=? ORDER BY m_id"
+	)->execute(array($ged_id))->fetchAll();
+	$medias = array();
+	foreach ($rows as $row) {
+		$medias[] = WT_Media::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+	}
 
-  $rows=WT_DB::prepare(
-    "SELECT o_type AS type, o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom".
-    " FROM `##other` WHERE o_file=? AND o_type!='HEAD' AND o_type!='TRLR' ORDER BY o_id"
-  )->execute(array($ged_id))->fetchAll();
-  $others = array();
-  foreach ($rows as $row) {
-    switch ($row->type) {
-    case 'NOTE':
-      $others[] = WT_Note::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
-      break;
-    case 'REPO':
-      $others[] = WT_Repository::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
-      break;
-    default:
-      $others[] = WT_GedcomRecord::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
-      break;
-    }
-  }
+	$rows=WT_DB::prepare(
+		"SELECT o_type AS type, o_id AS xref, o_file AS gedcom_id, o_gedcom AS gedcom".
+		" FROM `##other` WHERE o_file=? AND o_type!='HEAD' AND o_type!='TRLR' ORDER BY o_id"
+	)->execute(array($ged_id))->fetchAll();
+	$others = array();
+	foreach ($rows as $row) {
+		switch ($row->type) {
+		case 'NOTE':
+			$others[] = WT_Note::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+			break;
+		case 'REPO':
+			$others[] = WT_Repository::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+			break;
+		default:
+			$others[] = WT_GedcomRecord::getInstance($row->xref, $row->gedcom_id, $row->gedcom);
+			break;
+		}
+	}
 
-  // Buffer the output.  Lots of small fwrite() calls can be very slow when writing large gedcoms.
-  $buffer=reformat_record_export($head);
+	// Buffer the output.  Lots of small fwrite() calls can be very slow when writing large gedcoms.
+	$buffer=reformat_record_export($head);
 
-  foreach ($individuals as $individual) {
-    $rec = $individual->privatizeGedcom($access_level);
-	$rec .= "\n";
-	$rec .= "1 SOUR @WEBTREES@\n";
-	$rec .= "2 PAGE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$individual->getRawUrl()."\n";
-    if ($exportOptions['toANSI']=="yes") {
-      $rec=utf8_decode($rec);
-    }
-    $buffer.=reformat_record_export($rec);
-    if (strlen($buffer)>65536) {
-      fwrite($gedout, $buffer);
-      $buffer='';
-    }
-  }
+	foreach ($individuals as $individual) {
+		$rec = $individual->privatizeGedcom($access_level);
+		$rec .= "\n";
+		$rec .= "1 SOUR @WEBTREES@\n";
+		$rec .= "2 PAGE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$individual->getRawUrl()."\n";
+		if ($exportOptions['toANSI']=="yes") {
+			$rec=utf8_decode($rec);
+		}
+		$buffer.=reformat_record_export($rec);
+		if (strlen($buffer)>65536) {
+			fwrite($gedout, $buffer);
+			$buffer='';
+		}
+	}
 
-  foreach ($families as $family) {
-    $rec = $family->privatizeGedcom($access_level);
-	$rec .= "\n";
-	$rec .= "1 SOUR @WEBTREES@\n";
-	$rec .= "2 PAGE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$family->getRawUrl()."\n";
-    if ($exportOptions['toANSI']=="yes") {
-      $rec=utf8_decode($rec);
-    }
-    $buffer.=reformat_record_export($rec);
-    if (strlen($buffer)>65536) {
-      fwrite($gedout, $buffer);
-      $buffer='';
-    }
-  }
+	foreach ($families as $family) {
+		$rec = $family->privatizeGedcom($access_level);
+		$rec .= "\n";
+		$rec .= "1 SOUR @WEBTREES@\n";
+		$rec .= "2 PAGE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$family->getRawUrl()."\n";
+		if ($exportOptions['toANSI']=="yes") {
+			$rec=utf8_decode($rec);
+		}
+		$buffer.=reformat_record_export($rec);
+		if (strlen($buffer)>65536) {
+			fwrite($gedout, $buffer);
+			$buffer='';
+		}
+	}
 
-  foreach ($sources as $source) {
-    $rec = $source->privatizeGedcom($access_level);
-	$rec .= "\n";
-	$rec .= "1 NOTE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$source->getRawUrl()."\n";
-    if ($exportOptions['toANSI']=="yes") {
-      $rec=utf8_decode($rec);
-    }
-    $buffer.=reformat_record_export($rec);
-    if (strlen($buffer)>65536) {
-      fwrite($gedout, $buffer);
-      $buffer='';
-    }
-  }
+	foreach ($sources as $source) {
+		$rec = $source->privatizeGedcom($access_level);
+		$rec .= "\n";
+		$rec .= "1 NOTE ".WT_SERVER_NAME.WT_SCRIPT_PATH.$source->getRawUrl()."\n";
+		if ($exportOptions['toANSI']=="yes") {
+			$rec=utf8_decode($rec);
+		}
+		$buffer.=reformat_record_export($rec);
+		if (strlen($buffer)>65536) {
+			fwrite($gedout, $buffer);
+			$buffer='';
+		}
+	}
 
-  foreach ($others as $other) {
-    $rec = $other->privatizeGedcom($access_level);
-    if ($exportOptions['toANSI']=="yes") {
-      $rec=utf8_decode($rec);
-    }
-    $buffer.=reformat_record_export($rec);
-    if (strlen($buffer)>65536) {
-      fwrite($gedout, $buffer);
-      $buffer='';
-    }
-  }
+	foreach ($others as $other) {
+		$rec = $other->privatizeGedcom($access_level);
+		if ($exportOptions['toANSI']=="yes") {
+			$rec=utf8_decode($rec);
+		}
+		$buffer.=reformat_record_export($rec);
+		if (strlen($buffer)>65536) {
+			fwrite($gedout, $buffer);
+			$buffer='';
+		}
+	}
 
-  foreach ($medias as $media) {
-    $rec = $media->privatizeGedcom($access_level);
-    $rec = convert_media_path($rec, $exportOptions['path']);
-    if ($exportOptions['toANSI']=="yes") {
-      $rec=utf8_decode($rec);
-    }
-    $buffer.=reformat_record_export($rec);
-    if (strlen($buffer)>65536) {
-      fwrite($gedout, $buffer);
-      $buffer='';
-    }
-  }
+	foreach ($medias as $media) {
+		$rec = $media->privatizeGedcom($access_level);
+		$rec = convert_media_path($rec, $exportOptions['path']);
+		if ($exportOptions['toANSI']=="yes") {
+			$rec=utf8_decode($rec);
+		}
+		$buffer.=reformat_record_export($rec);
+		if (strlen($buffer)>65536) {
+			fwrite($gedout, $buffer);
+			$buffer='';
+		}
+	}
 
-  $buffer .= "0 @WEBTREES@ SOUR\n1 TITL ".$WT_TREE->tree_title."\n";
-  fwrite($gedout, $buffer."0 TRLR".WT_EOL);
+	$buffer .= "0 @WEBTREES@ SOUR\n1 TITL ".$WT_TREE->tree_title."\n";
+	fwrite($gedout, $buffer."0 TRLR".WT_EOL);
 
-  $GEDCOM = $oldGEDCOM;
+	$GEDCOM = $oldGEDCOM;
 }
