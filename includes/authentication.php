@@ -89,7 +89,7 @@ function userLogout($user_id) {
 }
 
 /**
- * get the current user's ID and Name
+ * get the current user’s ID and Name
  *
  * Returns 0 and NULL if we are not logged in.
  *
@@ -227,7 +227,7 @@ function addMessage($message) {
 	$user_id_from=get_user_id($message['from']);
 	$user_id_to  =get_user_id($message['to']);
 
-	// Switch to the "from" user's language
+	// Switch to the "from" user’s language
 	WT_I18N::init(get_user_setting($user_id_from, 'language'));
 
 	// Setup the message body for the "from" user

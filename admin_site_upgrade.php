@@ -46,7 +46,7 @@ $lock_file_text      = WT_I18N::translate('This site is being upgraded.  Try aga
 
 // Success/failure indicators
 $icon_success        = '<i class="icon-yes"></i>';
-$icon_failure        = '<i class="icon-delete"></i>';
+$icon_failure        = '<i class="icon-failure"></i>';
 
 // Need confirmation for various actions
 $continue            = WT_Filter::post('continue', '1') && WT_Filter::checkCsrf();
@@ -270,10 +270,10 @@ if ($custom_themes) {
 	echo '</li></ul></form>';
 	exit;	
 } else {
-	if ($modules_action != 'ignore') {
+	if ($themes_action != 'ignore') {
 		echo '<br>', WT_I18N::translate('No custom themes are enabled.'), $icon_success;
 	}
-	echo '<input type="hidden" name="themes" value="', WT_Filter::escapeHtml($modules_action), '">';
+	echo '<input type="hidden" name="themes" value="', WT_Filter::escapeHtml($themes_action), '">';
 }
 
 echo '</li>'; flush();
@@ -302,17 +302,24 @@ echo '</li>';
 
 echo '<li>', /* I18N: The system is about to [...]; %s is a URL. */ WT_I18N::translate('Download %s…', $download_url_html);
 
+$zip_file   = WT_DATA_DIR . basename($download_url);
+$zip_dir    = WT_DATA_DIR . basename($download_url, '.zip');
+$zip_stream = fopen($zip_file, 'w');
 $start_time = microtime(true);
-$zip_data = WT_File::fetchUrl($download_url);
-$end_time = microtime(true);
-$zip_file = WT_DATA_DIR . basename($download_url);
-$zip_dir  = WT_DATA_DIR . basename($download_url, '.zip');
-echo '<br>', /* I18N: %1$s is a number of KB, %2$s is a (fractional) number of seconds */ WT_I18N::translate('%1$sKB were downloaded in %2$s seconds.', WT_I18N::number(strlen($zip_data) / 1024), WT_I18N::number($end_time - $start_time, 2));
-if ($zip_data) {
+WT_File::fetchUrl($download_url, $zip_stream);
+$end_time   = microtime(true);
+$zip_size   = filesize($zip_file);
+fclose($zip_stream);
+
+echo '<br>', /* I18N: %1$s is a number of KB, %2$s is a (fractional) number of seconds */ WT_I18N::translate('%1$sKB were downloaded in %2$s seconds.', WT_I18N::number($zip_size / 1024), WT_I18N::number($end_time - $start_time, 2));
+if ($zip_size) {
 	echo $icon_success;
-	file_put_contents($zip_file, $zip_data);
 } else {
 	echo $icon_failure;
+	// Guess why we might have failed...
+	if (preg_match('/^https:/', $download_url) && !in_array('ssl', stream_get_transports())) {
+		echo '<br>', /* I18N: http://en.wikipedia.org/wiki/Https */ WT_I18N::translate('This server does not support secure downloads using HTTPS.');
+	}
 }
 
 echo '</li>'; flush();
