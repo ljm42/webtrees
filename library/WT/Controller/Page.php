@@ -48,7 +48,7 @@ class WT_Controller_Page extends WT_Controller_Base {
 		}
 	}
 
-	// What should this page show in the browser's title bar?
+	// What should this page show in the browser’s title bar?
 	public function setPageTitle($page_title) {
 		$this->page_title=$page_title;
 		return $this;
@@ -125,29 +125,29 @@ class WT_Controller_Page extends WT_Controller_Base {
 
 	// Print the page header, using the theme
 	public function pageHeader() {
-		// Import global variables into the local scope, for the theme's header.php
+		// Import global variables into the local scope, for the theme’s header.php
 		global $SEARCH_SPIDER, $TEXT_DIRECTION, $REQUIRE_AUTHENTICATION, $headerfile, $view;
 
 		// The title often includes the names of records, which may have markup
 		// that cannot be used in the page title.
 		$title=html_entity_decode(strip_tags($this->page_title), ENT_QUOTES, 'UTF-8');
 
-		// Initialise variables for the theme's header.php
-		$LINK_CANONICAL  =$this->canonical_url;
-		$META_ROBOTS     =$this->meta_robots;
-		$META_DESCRIPTION=WT_GED_ID ? get_gedcom_setting(WT_GED_ID, 'META_DESCRIPTION') : '';
+		// Initialise variables for the theme’s header.php
+		$LINK_CANONICAL   = $this->canonical_url;
+		$META_ROBOTS      = $this->meta_robots;
+		$META_DESCRIPTION = WT_GED_ID ? get_gedcom_setting(WT_GED_ID, 'META_DESCRIPTION') : '';
 		if (!$META_DESCRIPTION) {
-			$META_DESCRIPTION=WT_TREE_TITLE;
+			$META_DESCRIPTION = WT_TREE_TITLE;
 		}
-		$META_GENERATOR  =WT_WEBTREES.'-'.WT_VERSION_TEXT.' - '.WT_WEBTREES_URL;
-		$META_TITLE      =WT_GED_ID ? get_gedcom_setting(WT_GED_ID, 'META_TITLE') : '';
+		$META_GENERATOR = WT_WEBTREES . ' ' . WT_VERSION . ' - ' . WT_WEBTREES_URL;
+		$META_TITLE     = WT_GED_ID ? get_gedcom_setting(WT_GED_ID, 'META_TITLE') : '';
 		if ($META_TITLE) {
-			$title.=' - '.$META_TITLE;
+			$title .= ' - ' . $META_TITLE;
 		}
 
 		// This javascript needs to be loaded in the header, *before* the CSS.
 		// All other javascript should be defered until the end of the page
-		$javascript= '<script src="' . WT_MODERNIZR_URL . '"></script>';
+		$javascript = '<script src="' . WT_MODERNIZR_URL . '"></script>';
 
 		// Give Javascript access to some PHP constants
 		$this->addInlineJavascript('
