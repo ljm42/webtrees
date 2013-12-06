@@ -29,9 +29,8 @@ if (!defined('WT_SCRIPT_NAME')) {
 
 // Identify ourself
 define('WT_WEBTREES',        'webtrees');
-define('WT_VERSION',         '1.5.2');
-define('WT_VERSION_RELEASE', 'dev'); // “dev”, “beta”, “rc1”, “”, etc.
-define('WT_VERSION_TEXT',    trim(WT_VERSION.' '.WT_VERSION_RELEASE));
+define('WT_VERSION',      '1.5.2-dev');
+define('WT_VERSION_TEXT', WT_VERSION); // Deprecated
 
 // External URLs
 define('WT_WEBTREES_URL',    'http://www.webtrees.net/');

@@ -165,7 +165,7 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 	}
 
 	function getLabel($tag) {
-		return WT_Gedcom_Tag::getLabel(str_replace(':SDX', '', $tag));
+		return WT_Gedcom_Tag::getLabel(preg_replace('/:(SDX|BEGINS|EXACT|CONTAINS)$/', '', $tag));
 	}
 
 	function reorderFields() {
@@ -329,6 +329,10 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 								$bind[]  = $v;
 							}
 							$sql .= ' AND (' . implode(' OR ', $sdx) . ')';
+						} else {
+							// No phonetic content?  Use a substring match
+							$sql .= " AND i_n.n_givn LIKE CONCAT('%', ?, '%')";
+							$bind[] = $value;
 						}
 						break;
 					case 'SDX': // SDX uses DM by default.
@@ -341,6 +345,10 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 								$bind[]  = $v;
 							}
 							$sql .= ' AND (' . implode(' OR ', $sdx) . ')';
+						} else {
+							// No phonetic content?  Use a substring match
+							$sql .= " AND i_n.n_givn LIKE CONCAT('%', ?, '%')";
+							$bind[] = $value;
 						}
 						break;
 					}
@@ -368,6 +376,10 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 								$bind[]  = $v;
 							}
 							$sql .= " AND (" . implode(' OR ', $sdx) . ")";
+						} else {
+							// No phonetic content?  Use a substring match
+							$sql .= " AND i_n.n_surn LIKE CONCAT('%', ?, '%')";
+							$bind[] = $value;
 						}
 						break;
 					case 'SDX': // SDX uses DM by default.
@@ -381,6 +393,10 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 							}
 							$sql .= " AND (" . implode(' OR ', $sdx) . ")";
 							break;
+						} else {
+							// No phonetic content?  Use a substring match
+							$sql .= " AND i_n.n_surn LIKE CONCAT('%', ?, '%')";
+							$bind[] = $value;
 						}
 					}
 					break;
@@ -467,6 +483,10 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 								$bind[]  = $v;
 							}
 							$sql .= ' AND (' . implode(' OR ', $sdx) . ')';
+						} else {
+							// No phonetic content?  Use a substring match
+							$sql .= " AND {$table}.n_givn = LIKE CONCAT('%', ?, '%')";
+							$bind[] = $value;
 						}
 						break;
 					case 'SDX': // SDX uses DM by default.
@@ -480,6 +500,10 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 							}
 							$sql .= ' AND (' . implode(' OR ', $sdx) . ')';
 							break;
+						} else {
+							// No phonetic content?  Use a substring match
+							$sql .= " AND {$table}.n_givn = LIKE CONCAT('%', ?, '%')";
+							$bind[] = $value;
 						}
 					}
 					break;
@@ -506,6 +530,10 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 								$bind[]  = $v;
 							}
 							$sql .= ' AND (' . implode(' OR ', $sdx) . ')';
+						} else {
+							// No phonetic content?  Use a substring match
+							$sql .= " AND {$table}.n_surn = LIKE CONCAT('%', ?, '%')";
+							$bind[] = $value;
 						}
 						break;
 					case 'SDX': // SDX uses DM by default.
@@ -518,6 +546,10 @@ class WT_Controller_AdvancedSearch extends WT_Controller_Search {
 								$bind[]  = $v;
 							}
 							$sql .= ' AND (' . implode(' OR ', $sdx) . ')';
+						} else {
+							// No phonetic content?  Use a substring match
+							$sql .= " AND {$table}.n_surn = LIKE CONCAT('%', ?, '%')";
+							$bind[] = $value;
 						}
 						break;
 					}
